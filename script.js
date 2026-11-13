@@ -10,7 +10,10 @@
   const root = document.documentElement;
   const scenes = [...document.querySelectorAll('.scene')];
   const layers = [...document.querySelectorAll('.bd')];
+  const backdrop = document.querySelector('.backdrop');
+  const chrome = document.querySelector('.chrome');
   const railLabel = document.querySelector('.rail__label');
+  const railFill = document.querySelector('.rail__track i');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
   if (!scenes.length) return;
 
@@ -43,7 +46,6 @@
         world: el.dataset.world,
         label: el.dataset.label || '',
         bg: hex(v('--w-bg')),
-        accent: hex(v('--w-accent')),
         ink: v('--w-ink'),
         paper: v('--w-paper'),
         radius: parseFloat(v('--w-r')) || 0,
@@ -53,6 +55,15 @@
 
   let shownLabel = railLabel ? railLabel.textContent : '';
   let ticking = false;
+
+  // 値が変わったときだけ書き込む。
+  // 色と角丸は使う要素（背景・ナビ）にだけ渡し、ページ全体の再計算を起こさない
+  const last = {};
+  const put = (key, value, write) => {
+    if (last[key] === value) return;
+    last[key] = value;
+    write(value);
+  };
 
   const render = () => {
     ticking = false;
@@ -87,21 +98,28 @@
 
     const bg = mix(a.bg, b.bg, t);
     const main = t < 0.5 ? a : b;
-    const style = root.style;
-    style.setProperty('--bg', `rgb(${bg.join(' ')})`);
-    style.setProperty('--fg', luminance(bg) > LIGHT_BG ? main.ink : main.paper);
-    style.setProperty('--accent', `rgb(${mix(a.accent, b.accent, t).join(' ')})`);
-    style.setProperty('--r', `${(a.radius + (b.radius - a.radius) * t).toFixed(1)}px`);
-    style.setProperty('--sy', y.toFixed(0));
-    style.setProperty('--p', max > 0 ? Math.min(1, y / max).toFixed(4) : '0');
+    put('bg', `rgb(${bg.join(' ')})`, (v) => {
+      backdrop.style.setProperty('--bg', v);
+      chrome.style.setProperty('--bg', v);
+    });
+    put('fg', luminance(bg) > LIGHT_BG ? main.ink : main.paper, (v) => root.style.setProperty('--fg', v));
+    put('r', `${(a.radius + (b.radius - a.radius) * t).toFixed(1)}px`, (v) => chrome.style.setProperty('--r', v));
+    if (railFill) {
+      put('p', max > 0 ? Math.min(1, y / max).toFixed(3) : '0', (v) => { railFill.style.transform = `scaleY(${v})`; });
+    }
 
+    let tankVisible = false;
     for (const layer of layers) {
       const w = layer.dataset.world;
       const o = a === b ? (a.world === w ? 1 : 0) : (a.world === w ? 1 - t : 0) + (b.world === w ? t : 0);
-      layer.style.opacity = o.toFixed(3);
-      layer.style.visibility = o > 0.004 ? 'visible' : 'hidden';
+      const shown = o > 0.004;
+      if (w === 'tank') tankVisible = shown;
+      put(`o-${w}`, o.toFixed(3), (v) => {
+        layer.style.opacity = v;
+        layer.style.visibility = shown ? 'visible' : 'hidden';
+      });
     }
-    tank.setVisible(layers.some((l) => l.dataset.world === 'tank' && l.style.visibility === 'visible'));
+    tank.setVisible(tankVisible);
 
     if (root.dataset.world !== main.world) root.dataset.world = main.world;
     if (railLabel && shownLabel !== main.label) {

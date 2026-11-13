@@ -32,10 +32,7 @@
 :root {
   --bg: #2b3cf5;
   --fg: #ffffff;
-  --accent: #ffffff;
   --r: 0px;
-  --p: 0;
-  --sy: 0;
   --gutter: clamp(20px, 5.2vw, 72px);
 
   --f-body: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, sans-serif;
@@ -189,24 +186,32 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
   inset: 0;
   background: var(--fg);
   transform-origin: top;
-  transform: scaleY(var(--p));
+  transform: scaleY(0);
+  will-change: transform;
 }
 @media (min-width: 1100px) {
   .rail { display: block; }
 }
 
 /* ---------- 奥に固定した背景 ---------- */
+/* 背景色とそれぞれの模様は、本文とは別のレイヤーに置く。
+   スクロール中に変わるのはこのレイヤーの色と不透明度だけなので、
+   本文を描き直さずに済む */
 .backdrop {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  background-color: var(--bg);
+  will-change: background-color;
+  transform: translateZ(0);
 }
 .bd {
   position: absolute;
   inset: 0;
   opacity: 0;
+  will-change: opacity;
 }
 .bd i, .bd span { position: absolute; display: block; }
 
@@ -301,7 +306,7 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
 .bd--corelia::after {
   content: "";
   position: absolute;
-  inset: -12% 0;
+  inset: 0;
 }
 .bd--corelia::before {
   background-image:
@@ -310,14 +315,12 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
     radial-gradient(circle at 96px 210px, rgba(150, 215, 255, .85), transparent 2.4px),
     radial-gradient(circle at 280px 64px, rgba(255, 255, 255, .45), transparent 4px);
   background-size: 233px 241px, 311px 293px, 419px 373px, 547px 461px;
-  transform: translateY(calc(var(--sy) * -0.03px));
 }
 .bd--corelia::after {
   background-image:
     radial-gradient(circle at 70px 90px, rgba(255, 255, 255, .28), transparent 7px),
     radial-gradient(circle at 400px 300px, rgba(255, 255, 255, .2), transparent 9px);
   background-size: 613px 587px, 829px 743px;
-  transform: translateY(calc(var(--sy) * -0.06px));
 }
 
 /* TankAce：流れる三角形（TriBgSystem を canvas で再現。script.js） */
@@ -337,11 +340,11 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
 }
 
 .scene--hero,
-.scene--contact { --w-bg: #2b3cf5; --w-ink: #000000; --w-paper: #ffffff; --w-accent: #ffffff; --w-r: 0; }
-.scene--drift   { --w-bg: #f1f0ec; --w-ink: #141414; --w-paper: #f9f8f5; --w-accent: #cfe021; --w-r: 0; }
-.scene--corelia { --w-bg: #000000; --w-ink: #1a1a24; --w-paper: #ffffff; --w-accent: #ffd959; --w-r: 18; }
-.scene--tank    { --w-bg: #9a0c0e; --w-ink: #14141c; --w-paper: #ffffff; --w-accent: #ffe600; --w-r: 3; }
-.scene--profile { --w-bg: #ffffff; --w-ink: #000000; --w-paper: #ffffff; --w-accent: #2b3cf5; --w-r: 0; }
+.scene--contact { --w-bg: #2b3cf5; --w-ink: #000000; --w-paper: #ffffff; --w-r: 0; }
+.scene--drift   { --w-bg: #f1f0ec; --w-ink: #141414; --w-paper: #f9f8f5; --w-r: 0; }
+.scene--corelia { --w-bg: #000000; --w-ink: #1a1a24; --w-paper: #ffffff; --w-r: 18; }
+.scene--tank    { --w-bg: #9a0c0e; --w-ink: #14141c; --w-paper: #ffffff; --w-r: 3; }
+.scene--profile { --w-bg: #ffffff; --w-ink: #000000; --w-paper: #ffffff; --w-r: 0; }
 
 /* ==========================================================
    トップ
@@ -783,10 +786,10 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
   gap: 20px;
   text-align: center;
 }
-.c-logo img {
-  width: min(580px, 88vw);
-  filter: drop-shadow(0 0 30px rgba(90, 190, 255, .35));
+.c-logo {
+  background: radial-gradient(closest-side, rgba(90, 190, 255, .22), transparent);
 }
+.c-logo img { width: min(580px, 88vw); }
 .c-says {
   display: flex;
   align-items: flex-end;
@@ -941,10 +944,7 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
    ========================================================== */
 .scene--tank { font-family: var(--f-tank); }
 
-.t-logo img {
-  width: min(600px, 92%);
-  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .45));
-}
+.t-logo img { width: min(600px, 92%); }
 .t-chips {
   display: flex;
   flex-wrap: wrap;
@@ -1237,6 +1237,4 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
     animation: none !important;
     transition: none !important;
   }
-  .bd--corelia::before,
-  .bd--corelia::after { transform: none; }
 }
