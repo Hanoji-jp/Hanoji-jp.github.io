@@ -44,7 +44,9 @@
   --chrome-font: var(--f-body);
   --mark-font: var(--f-shell);
 
-  transition: --fg .22s linear;
+  /* 文字色の切り替えは本文全体の描き直しになる。
+     なめらかに変えると 0.2 秒のあいだ毎フレーム描き直すので、3段階に分けて3回で済ませる */
+  transition: --fg .2s steps(3, end);
 }
 
 html[data-world="drift"]   { --chrome-font: var(--f-drift); --mark-font: var(--f-drift); }
@@ -110,7 +112,8 @@ a { color: inherit; }
 }
 @keyframes curtain {
   0%, 42% { transform: none; }
-  100% { transform: translateY(-101%); }
+  99% { visibility: visible; }
+  100% { transform: translateY(-101%); visibility: hidden; }
 }
 
 /* ---------- 固定の枠（ロゴ・ナビ・縦書きの見出し） ---------- */
@@ -210,13 +213,28 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
 .bd {
   position: absolute;
   inset: 0;
-  opacity: 0;
+  opacity: var(--o, 0);   /* script.js が --o を書き換える */
   will-change: opacity;
 }
-.bd i, .bd span { position: absolute; display: block; }
+/* 星空と三角形は canvas そのものを1枚のレイヤーにする。
+   包みの要素を挟まないので、薄くしていくときに余分な合成が要らない */
+canvas.bd {
+  width: 100%;
+  height: 100%;
+}
+.bd i, .bd b, .bd span { position: absolute; display: block; }
 
 /* DRIFT PROJECT：構築線・切れ目の印・網点・円・バーコード（タイトル画面の配置） */
 .bd--drift { color: #141414; font-family: var(--f-drift); }
+
+/* この背景だけは、まとめて薄くしない。
+   明滅する網点はそれぞれ別レイヤーで動くので、親ごと薄くすると
+   画面全体を一度別の場所に描いてから重ねる作業が毎フレーム増える。
+   止まっている部品（.decor）と、動く部品（.tw）を1つずつ薄くすれば、それが要らない */
+.bd--drift { opacity: 1; will-change: auto; }
+.bd--drift > .decor,
+.bd--drift > .tw { opacity: var(--o, 0); will-change: opacity; }
+.bd--drift > .decor { position: absolute; inset: 0; }
 .bd--drift .guide { background: rgba(20, 20, 20, .09); }
 .bd--drift .guide--h1 { left: 0; right: 0; top: 10.6%; height: 1px; }
 .bd--drift .guide--h2 { left: 0; right: 0; top: 78%; height: 1px; }
@@ -255,14 +273,19 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
 .bd--drift .rings::before { translate: 9% -6%; }
 .bd--drift .rings::after { translate: 18% 5%; scale: .86; }
 .bd--drift .dots {
+  inset: 0;
   background: radial-gradient(circle, rgba(20, 20, 20, .42) 1.6px, transparent 2.1px) 0 0 / 11px 11px;
   animation: twinkle 2.1s ease-in-out infinite alternate;
 }
-.bd--drift .dots--1 { left: 45.6%; top: 17.4%; width: 77px; height: 44px; }
-.bd--drift .dots--2 { left: 76.2%; top: 13.9%; width: 154px; height: 110px; animation-delay: -.7s; }
-.bd--drift .dots--3 { left: 86.6%; top: 13.9%; width: 88px; height: 110px; animation-delay: -1.4s; opacity: .5; }
-.bd--drift .dots--4 { left: 4.6%; top: 54.4%; width: 88px; height: 66px; animation-delay: -2.1s; }
-.bd--drift .dots--5 { left: 54.7%; top: 83.3%; width: 176px; height: 44px; animation-delay: -2.8s; }
+.bd--drift .tw--1 { left: 45.6%; top: 17.4%; width: 77px; height: 44px; }
+.bd--drift .tw--2 { left: 76.2%; top: 13.9%; width: 154px; height: 110px; }
+.bd--drift .tw--3 { left: 86.6%; top: 13.9%; width: 88px; height: 110px; }
+.bd--drift .tw--4 { left: 4.6%; top: 54.4%; width: 88px; height: 66px; }
+.bd--drift .tw--5 { left: 54.7%; top: 83.3%; width: 176px; height: 44px; }
+.bd--drift .tw--2 .dots { animation-delay: -.7s; }
+.bd--drift .tw--3 .dots { animation-delay: -1.4s; background-image: radial-gradient(circle, rgba(20, 20, 20, .21) 1.6px, transparent 2.1px); }
+.bd--drift .tw--4 .dots { animation-delay: -2.1s; }
+.bd--drift .tw--5 .dots { animation-delay: -2.8s; }
 @keyframes twinkle {
   from { opacity: .35; }
   to { opacity: 1; }
@@ -286,9 +309,10 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
   letter-spacing: .18em;
   white-space: nowrap;
 }
+.bd--drift .tw--s { right: 5.6%; top: 12.6%; width: 2.2em; height: 1.4em; }
 .bd--drift .slashes {
-  right: 5.6%;
-  top: 12.6%;
+  right: 0;
+  top: 0;
   font-weight: 900;
   font-style: italic;
   font-size: 1.0625rem;
@@ -301,31 +325,11 @@ html[data-world="tank"] .chrome__mark { font-style: italic; font-weight: 700; le
   to { translate: 0 5px; }
 }
 
-/* Corelia：星空 */
-.bd--corelia::before,
-.bd--corelia::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-.bd--corelia::before {
-  background-image:
-    radial-gradient(circle at 24px 36px, rgba(255, 255, 255, .95), transparent 2px),
-    radial-gradient(circle at 150px 118px, rgba(255, 255, 255, .6), transparent 3px),
-    radial-gradient(circle at 96px 210px, rgba(150, 215, 255, .85), transparent 2.4px),
-    radial-gradient(circle at 280px 64px, rgba(255, 255, 255, .45), transparent 4px);
-  background-size: 233px 241px, 311px 293px, 419px 373px, 547px 461px;
-}
-.bd--corelia::after {
-  background-image:
-    radial-gradient(circle at 70px 90px, rgba(255, 255, 255, .28), transparent 7px),
-    radial-gradient(circle at 400px 300px, rgba(255, 255, 255, .2), transparent 9px);
-  background-size: 613px 587px, 829px 743px;
-}
+/* Corelia の星空と TankAce の三角形は script.js が WebGL で描く */
 
-/* TankAce：流れる三角形（TriBgSystem を canvas で再現。script.js） */
-.bd--tank { background: #9a0c0e; }
-.bd--tank canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* 画面に出ていない背景のアニメーションは止めておく */
+.bd:not(.is-live) * { animation-play-state: paused; }
+html:not([data-world="shell"]) .hero__scroll::after { animation-play-state: paused; }
 
 /* ---------- 場面の共通 ---------- */
 .scene {
@@ -786,10 +790,13 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
   gap: 20px;
   text-align: center;
 }
-.c-logo {
-  background: radial-gradient(closest-side, rgba(90, 190, 255, .22), transparent);
+/* ロゴの光。別レイヤーにはしない。
+   そうすると描いたときに1回だけぼかしを計算して、あとはその絵を使い回せる
+   （別レイヤーにすると、合成のたびに毎フレームぼかし直すことになる） */
+.c-logo img {
+  width: min(580px, 88vw);
+  filter: drop-shadow(0 0 30px rgba(90, 190, 255, .35));
 }
-.c-logo img { width: min(580px, 88vw); }
 .c-says {
   display: flex;
   align-items: flex-end;
@@ -944,7 +951,10 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
    ========================================================== */
 .scene--tank { font-family: var(--f-tank); }
 
-.t-logo img { width: min(600px, 92%); }
+.t-logo img {
+  width: min(600px, 92%);
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, .45));
+}
 .t-chips {
   display: flex;
   flex-wrap: wrap;
@@ -1159,6 +1169,19 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
 }
 .no-js .scene--drift,
 .no-js .scene--profile { --fg: var(--w-ink); color: var(--w-ink); }
+/* WebGL で描けないとき（GPU なし）の止まった背景 */
+.bd--tank.is-flat { background: #7a0a0f url("assets/tankace-poly.svg") center / cover; }
+
+/* 星空を動かせないとき（JavaScript なし、WebGL なし）の止まった星 */
+.bd--corelia.is-flat,
+.no-js .scene--corelia {
+  background-image:
+    radial-gradient(circle at 24px 36px, rgba(255, 255, 255, .95), transparent 2px),
+    radial-gradient(circle at 150px 118px, rgba(255, 255, 255, .6), transparent 3px),
+    radial-gradient(circle at 96px 210px, rgba(150, 215, 255, .85), transparent 2.4px),
+    radial-gradient(circle at 280px 64px, rgba(255, 255, 255, .45), transparent 4px);
+  background-size: 233px 241px, 311px 293px, 419px 373px, 547px 461px;
+}
 .no-js .scene--tank { background: #7a0a0f url("assets/tankace-poly.svg") center / cover; }
 .no-js .chrome { position: absolute; --bg: #2b3cf5; --fg: #fff; }
 
@@ -1180,7 +1203,7 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
   .t-weapons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .c-talks { grid-template-columns: minmax(0, 1fr); }
   .bd--drift .rings { left: 80%; top: 70%; }
-  .bd--drift .dots,
+  .bd--drift .tw:not(.tw--s),
   .bd--drift .creed { display: none; }
   .bd--drift .rings { opacity: .6; }
 }

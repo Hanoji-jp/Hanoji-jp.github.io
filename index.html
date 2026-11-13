@@ -22,17 +22,19 @@
   <!-- 画面の奥に固定している背景。スクロール位置に合わせて入れ替わる -->
   <div class="backdrop" aria-hidden="true">
     <div class="bd bd--drift" data-world="drift">
-      <i class="guide guide--h1"></i><i class="guide guide--h2"></i>
-      <i class="guide guide--v1"></i><i class="guide guide--v2"></i>
-      <i class="tick tick--1"></i><i class="tick tick--2"></i><i class="tick tick--3"></i><i class="tick tick--4"></i>
-      <i class="rings"></i>
-      <i class="dots dots--1"></i><i class="dots dots--2"></i><i class="dots dots--3"></i><i class="dots dots--4"></i><i class="dots dots--5"></i>
-      <i class="barcode"></i>
-      <span class="slashes">///</span>
-      <span class="creed">FOCUS // ADAPT // OVERCOME</span>
+      <div class="decor">
+        <i class="guide guide--h1"></i><i class="guide guide--h2"></i>
+        <i class="guide guide--v1"></i><i class="guide guide--v2"></i>
+        <i class="tick tick--1"></i><i class="tick tick--2"></i><i class="tick tick--3"></i><i class="tick tick--4"></i>
+        <i class="rings"></i>
+        <i class="barcode"></i>
+        <span class="creed">FOCUS // ADAPT // OVERCOME</span>
+      </div>
+      <i class="tw tw--1"><b class="dots"></b></i><i class="tw tw--2"><b class="dots"></b></i><i class="tw tw--3"><b class="dots"></b></i><i class="tw tw--4"><b class="dots"></b></i><i class="tw tw--5"><b class="dots"></b></i>
+      <i class="tw tw--s"><b class="slashes">///</b></i>
     </div>
-    <div class="bd bd--corelia" data-world="corelia"></div>
-    <div class="bd bd--tank" data-world="tank"><canvas></canvas></div>
+    <canvas class="bd bd--corelia" data-world="corelia"></canvas>
+    <canvas class="bd bd--tank" data-world="tank"></canvas>
   </div>
 
   <header class="chrome">
