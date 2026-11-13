@@ -97,7 +97,7 @@ nav a:hover { background: var(--blue); }
 }
 .hero h1 { margin: 20px 0 12px; font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; letter-spacing: -.04em; }
 .hero-role { margin: 0 0 14px; font-size: 1.2rem; font-weight: 800; }
-.hero-copy { margin: 0 0 28px; max-width: 34em; }
+.hero-copy { margin: 0 0 28px; max-width: 44em; }
 .hero-mark { display: none; }
 
 /* works */
@@ -205,43 +205,98 @@ nav a:hover { background: var(--blue); }
 
 /* ===== 作品ごとのテーマ ===== */
 
-/* 1. 重力ゲーム: SF・宇宙のHUD */
-.theme-gravity {
-  --c: #38e1ff;
-  color: #d8f3ff;
-  background:
-    radial-gradient(circle at 15% 20%, rgba(255,255,255,.8) 0 1px, transparent 2px),
-    radial-gradient(circle at 70% 35%, rgba(255,255,255,.6) 0 1px, transparent 2px),
-    radial-gradient(circle at 40% 80%, rgba(255,255,255,.7) 0 1px, transparent 2px),
-    #050b1f;
-  border: 2px solid var(--c);
-  box-shadow: 0 0 0 4px #050b1f, 0 0 28px rgba(56, 225, 255, .5);
+/* 1. ドリフトゲーム: アシッドグリーン × 墨 × 紙（ゲーム内UIの配色・Archivo） */
+@font-face {
+  font-family: "Archivo Black";
+  src: url("assets/fonts/Archivo-Black.ttf") format("truetype");
+  font-display: swap;
 }
-.theme-gravity .video-frame { border-color: var(--c); background: #0a1840; }
-.theme-gravity .video-placeholder { background: #0a1840; color: var(--c); letter-spacing: .3em; }
-.theme-gravity .work-type { border-color: var(--c); background: transparent; color: var(--c); }
-.theme-gravity h3 { color: var(--c); text-shadow: 0 0 12px rgba(56, 225, 255, .6); }
-.theme-gravity .work-meta div { border-top: 1px solid rgba(56, 225, 255, .5); }
-.theme-gravity .work-meta dt { color: var(--c); font-family: var(--mono); }
-.theme-gravity .tags span { border-color: var(--c); background: transparent; color: var(--c); }
-.theme-gravity .text-link { border-color: var(--c); background: transparent; color: var(--c); box-shadow: 0 0 12px rgba(56, 225, 255, .5); }
+.theme-drift {
+  --acid: #cfe021;
+  --paper-ui: #f1f0ec;
+  background: #272725;
+  color: var(--paper-ui);
+  border: 3px solid var(--acid);
+  box-shadow: 6px 6px 0 var(--acid);
+}
+.theme-drift .video-frame { background: #30302c; border-color: var(--acid); }
+.theme-drift .video-frame::before {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 38%;
+  height: 140%;
+  border: 14px solid var(--acid);
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(207, 224, 33, .4);
+}
+.theme-drift .video-frame::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 6%;
+  width: 88%;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--paper-ui) 0 16%, transparent 16% 20%);
+}
+.theme-drift .video-placeholder { z-index: 1; background: transparent; color: var(--paper-ui); letter-spacing: .3em; }
+.theme-drift .work-type { border: 0; background: var(--acid); color: #141414; }
+.theme-drift h3 { margin: 12px 0 8px; font-size: 1.1rem; font-weight: 800; }
+.theme-drift h3 .en {
+  display: block;
+  margin-bottom: 2px;
+  font-family: "Archivo Black", "Arial Black", Impact, sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+.theme-drift h3 .en i { margin: 0 .12em; color: var(--acid); font-style: normal; }
+.theme-drift .work-description { color: #d0d0ca; }
+.theme-drift .work-points b, .theme-drift .work-meta dt { color: var(--acid); }
+.theme-drift .work-meta div { border-top: 1px solid rgba(241, 240, 236, .3); }
+.theme-drift .tags span { border: 1px solid var(--paper-ui); background: transparent; color: var(--paper-ui); border-radius: 0; }
+.theme-drift .text-link { border-color: #141414; background: var(--acid); color: #141414; box-shadow: 4px 4px 0 var(--paper-ui); }
 
-/* 2. 2Dシューティング: アーケード */
-.theme-shooter {
-  color: #fff;
-  background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 2px, transparent 2px 4px),
-    #14002e;
-  border: 3px solid #ff2fd2;
-  box-shadow: 6px 6px 0 #ffe14d;
+/* 2. Corelia: 石のロゴ × 青い水晶 × 濃紺の宇宙 */
+.theme-corelia {
+  color: #e8f1ff;
+  background: radial-gradient(ellipse at 15% 0%, #1d3a7a 0, transparent 55%), #0b1230;
+  border: 4px solid #dfe5f0;
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px #1b2a4a, 0 0 32px rgba(76, 201, 255, .35);
 }
-.theme-shooter .video-frame { border-color: #ff2fd2; background: #000; }
-.theme-shooter .video-placeholder { background: #000; color: #ff2fd2; font-weight: 900; letter-spacing: .25em; }
-.theme-shooter .work-type { border: 0; background: #ffe14d; color: #111; }
-.theme-shooter h3 { color: #ffe14d; letter-spacing: .06em; text-shadow: 2px 2px 0 #ff2fd2; }
-.theme-shooter .work-meta div { border-top: 2px dotted #ff2fd2; }
-.theme-shooter .work-meta dt { color: #00e5ff; font-family: var(--mono); }
-.theme-shooter .tags span { border-color: #00e5ff; background: #00e5ff; color: #111; }
+.theme-corelia .video-frame { background: #0b1230; border-color: #dfe5f0; }
+.theme-corelia .work-type { border-color: #1b2a4a; background: #dfe5f0; color: #1b2a4a; }
+.theme-corelia h3 { margin: 12px 0 8px; }
+.theme-corelia h3 .logo { display: block; width: min(100%, 320px); height: auto; margin-bottom: 4px; }
+.theme-corelia h3 .sub { display: block; color: #9fd8ff; font-size: 1rem; font-weight: 700; }
+.theme-corelia .work-description { color: #c3d4f0; }
+.theme-corelia .work-points b, .theme-corelia .work-meta dt { color: #7fd8ff; }
+.theme-corelia .work-meta div { border-top: 1px solid rgba(127, 216, 255, .4); }
+.theme-corelia .tags span { border-color: #4cc9ff; background: transparent; color: #7fd8ff; }
+.theme-corelia .stage-shot { display: block; width: 100%; height: auto; margin: 14px 0 0; border: 3px solid #dfe5f0; border-radius: 6px; }
+
+/* 3. TankAce: 黄色の縁取り文字 × 赤い影 × 暗いスレート */
+.theme-tank {
+  color: #fff;
+  background: #1c2430;
+  border: 3px solid #ffd93b;
+  box-shadow: 6px 6px 0 #e63946;
+}
+.theme-tank .video-frame {
+  display: grid;
+  place-items: center;
+  border-color: #ffd93b;
+  background: #1c2430 url("assets/tankace-bg.jpg") center / cover;
+}
+.theme-tank .video-frame .logo { position: relative; z-index: 1; width: 82%; height: auto; }
+.theme-tank .work-type { border-color: #111; background: #ffd93b; color: #111; }
+.theme-tank h3 { color: #ffd93b; text-shadow: 2px 2px 0 #e63946; letter-spacing: .04em; }
+.theme-tank .work-meta div { border-top: 2px dotted rgba(255, 217, 59, .5); }
+.theme-tank .work-meta dt { color: #ffd93b; }
+.theme-tank .tags span { border-color: #111; background: #e63946; color: #fff; }
 
 /* 3. 2Dパズルアクション: カラフルなブロック */
 .theme-puzzle {
@@ -305,3 +360,30 @@ nav a:hover { background: var(--blue); }
 @media (prefers-reduced-motion: reduce) {
   .theme-jam { transform: none; }
 }
+
+/* ===== 共通: 画像・バッジ・向き ===== */
+.video-frame .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video-placeholder.is-badge {
+  inset: auto;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  padding: 2px 10px;
+  border: 2px solid #fff;
+  background: rgba(0, 0, 0, .75);
+  color: #fff;
+  font-size: .75rem;
+  letter-spacing: .08em;
+}
+.work-points b { font-weight: 800; }
+.work-reverse { grid-template-columns: 1fr 1.3fr; }
+.work-reverse .video-frame { order: 2; border-right: 0; border-left: var(--border); }
+.work-reverse .work-body { order: 1; }
+
+@media (max-width: 800px) {
+  .work-reverse { grid-template-columns: 1fr; }
+  .work-reverse .video-frame { order: 0; border-left: 0; }
+  .work-reverse .work-body { order: 1; }
+}
+
+.theme-corelia .video-frame .poster { object-fit: contain; }
