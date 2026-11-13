@@ -202,3 +202,106 @@ nav a:hover { background: var(--blue); }
   html { scroll-behavior: auto; }
   .text-link, .button-link { transition: none; }
 }
+
+/* ===== 作品ごとのテーマ ===== */
+
+/* 1. 重力ゲーム: SF・宇宙のHUD */
+.theme-gravity {
+  --c: #38e1ff;
+  color: #d8f3ff;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 35%, rgba(255,255,255,.6) 0 1px, transparent 2px),
+    radial-gradient(circle at 40% 80%, rgba(255,255,255,.7) 0 1px, transparent 2px),
+    #050b1f;
+  border: 2px solid var(--c);
+  box-shadow: 0 0 0 4px #050b1f, 0 0 28px rgba(56, 225, 255, .5);
+}
+.theme-gravity .video-frame { border-color: var(--c); background: #0a1840; }
+.theme-gravity .video-placeholder { background: #0a1840; color: var(--c); letter-spacing: .3em; }
+.theme-gravity .work-type { border-color: var(--c); background: transparent; color: var(--c); }
+.theme-gravity h3 { color: var(--c); text-shadow: 0 0 12px rgba(56, 225, 255, .6); }
+.theme-gravity .work-meta div { border-top: 1px solid rgba(56, 225, 255, .5); }
+.theme-gravity .work-meta dt { color: var(--c); font-family: var(--mono); }
+.theme-gravity .tags span { border-color: var(--c); background: transparent; color: var(--c); }
+.theme-gravity .text-link { border-color: var(--c); background: transparent; color: var(--c); box-shadow: 0 0 12px rgba(56, 225, 255, .5); }
+
+/* 2. 2Dシューティング: アーケード */
+.theme-shooter {
+  color: #fff;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 2px, transparent 2px 4px),
+    #14002e;
+  border: 3px solid #ff2fd2;
+  box-shadow: 6px 6px 0 #ffe14d;
+}
+.theme-shooter .video-frame { border-color: #ff2fd2; background: #000; }
+.theme-shooter .video-placeholder { background: #000; color: #ff2fd2; font-weight: 900; letter-spacing: .25em; }
+.theme-shooter .work-type { border: 0; background: #ffe14d; color: #111; }
+.theme-shooter h3 { color: #ffe14d; letter-spacing: .06em; text-shadow: 2px 2px 0 #ff2fd2; }
+.theme-shooter .work-meta div { border-top: 2px dotted #ff2fd2; }
+.theme-shooter .work-meta dt { color: #00e5ff; font-family: var(--mono); }
+.theme-shooter .tags span { border-color: #00e5ff; background: #00e5ff; color: #111; }
+
+/* 3. 2Dパズルアクション: カラフルなブロック */
+.theme-puzzle {
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(43,45,66,.08) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(43,45,66,.08) 1px, transparent 1px) 0 0 / 28px 28px,
+    #fff6e5;
+  border: 4px solid #2b2d42;
+  border-radius: 20px;
+  box-shadow: 0 8px 0 #2b2d42;
+}
+.theme-puzzle .video-frame { border-color: #2b2d42; background: #2ec4b6; }
+.theme-puzzle .video-placeholder { background: #2ec4b6; color: #fff; font-weight: 900; }
+.theme-puzzle .work-type { border: 0; border-radius: 99px; background: #2ec4b6; color: #fff; }
+.theme-puzzle h3 { color: #e76f00; }
+.theme-puzzle .work-meta div { border-top: 2px dashed #2b2d42; }
+.theme-puzzle .tags span { border: 0; border-radius: 8px; background: #ff9f1c; color: #111; }
+
+/* 4. ゲームジャム: 手作り・ダンボール */
+.theme-jam {
+  background: #e8d3a8;
+  border: 3px dashed #5b3a1a;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, .3);
+  transform: rotate(-.6deg);
+  font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "Comic Sans MS", sans-serif;
+}
+.theme-jam .video-frame { border-bottom: 3px dashed #5b3a1a; background: #cdb583; }
+.theme-jam .video-placeholder { background: #cdb583; color: #5b3a1a; font-family: inherit; }
+.theme-jam .work-type { border: 0; background: #ffe14d; transform: rotate(-2deg); }
+.theme-jam h3 { color: #5b3a1a; }
+.theme-jam .work-meta div { border-top: 2px dashed #5b3a1a; }
+.theme-jam .tags span { border-color: #5b3a1a; background: #fff6d6; }
+
+/* 5. はじめての個人制作: 基本図形 */
+.theme-shapes { background: #fff; }
+.theme-shapes .video-frame { background: #fff; }
+.theme-shapes .video-placeholder {
+  background:
+    radial-gradient(circle at 22% 50%, #e63946 0 17%, transparent 18%),
+    linear-gradient(#2a6fdb, #2a6fdb) 50% 50% / 26% 46% no-repeat,
+    #fff;
+  color: transparent;
+}
+.theme-shapes .video-placeholder::after {
+  content: "";
+  position: absolute;
+  top: 27%;
+  right: 14%;
+  width: 22%;
+  height: 46%;
+  background: #ffcf1f;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.theme-shapes h3 { font-weight: 900; }
+.theme-shapes .work-type { background: #ffcf1f; }
+
+@media (max-width: 650px) {
+  .theme-jam { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-jam { transform: none; }
+}
