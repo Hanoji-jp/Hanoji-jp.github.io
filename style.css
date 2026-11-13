@@ -1140,7 +1140,13 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
 }
 .scene--contact .wrap { width: 100%; }
 .k-text { margin-top: 16px; font-size: 1.125rem; }
-.k-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 28px; }
+.k-mail {
+  margin-top: 18px;
+  font-weight: 900;
+  font-size: clamp(1rem, 4.2vw, 1.625rem);
+  line-height: 1.4;
+}
+.k-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 22px; }
 .k-btn {
   display: inline-block;
   padding: 14px 28px;
