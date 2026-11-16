@@ -443,6 +443,28 @@ html:not([data-world="shell"]) .hero__scroll::after { animation-play-state: paus
   line-height: 1.4;
 }
 
+/* 作品カードの角に貼るラベル（就活作品） */
+.hero__works li { position: relative; }
+.kv__tag {
+  position: absolute;
+  z-index: 1;
+  top: -15px;
+  left: -13px;
+  padding: .3em .85em;
+  border: 3px solid #000;
+  background: #cfe021;
+  color: #000;
+  font-weight: 900;
+  font-size: .875rem;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  rotate: -4deg;
+  pointer-events: none;
+  transition: translate .14s ease-out;
+}
+.hero__works li:has(.kv:hover) .kv__tag,
+.hero__works li:has(.kv:focus-visible) .kv__tag { translate: -4px -4px; }
+
 .kv--drift { background: #f1f0ec; color: #141414; }
 .kv--drift .kv__art {
   display: flex;
@@ -1246,6 +1268,7 @@ p, dd, li { line-break: strict; overflow-wrap: anywhere; }
     white-space: nowrap;
   }
   .kv--drift .kv__cap { align-self: stretch; display: grid; place-items: center; margin: 0; padding: 0 12px; }
+  .kv__tag { top: -11px; left: -7px; border-width: 2px; font-size: .6875rem; }
   .hero__scroll { display: none; }
 
   .d-menu > div { grid-template-columns: minmax(0, 1fr); }
